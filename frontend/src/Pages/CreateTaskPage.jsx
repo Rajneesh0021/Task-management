@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../Components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createTask } from '../API/Api';
-const CreateTaskPage = ({ onAddTask }) => {
+import swal from 'sweetalert'
+
+
+const CreateTaskPage = () => {
   const token =localStorage.getItem('token')
+  const navigate =useNavigate()
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
+  useEffect(() => {
+    if(!token){
+     navigate('/login')
+    }
+   
+  }, [token]);
+
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -19,6 +30,16 @@ const CreateTaskPage = ({ onAddTask }) => {
   
     try {
     const response=  await createTask(newTask,token); 
+    if(response.message){
+      swal({
+        title: "Message",
+        text: response.message,
+        icon: "success",
+      });
+      setTitle('')
+      setDescription('')
+      setDueDate('')
+    }
       console.log(response)
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -27,10 +48,12 @@ const CreateTaskPage = ({ onAddTask }) => {
   };
 
   return (
+    <>
+     <Navbar link={'/'} text={'Tasks'}/>
     <div className="container mt-5">
       <h2 className="text-center mb-4">Create New Task</h2>
-      <Link to='/'>Check Your Tasks</Link>
-      <form onSubmit={handleSubmit}>
+      
+      <form className=' p-4' onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">Title</label>
           <input
@@ -63,9 +86,10 @@ const CreateTaskPage = ({ onAddTask }) => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Create Task</button>
+        <button type="submit" className="btn btn-primary btn-sm mx-2 m-2 w-100">Create Task</button>
       </form>
     </div>
+    </>
   );
 };
 

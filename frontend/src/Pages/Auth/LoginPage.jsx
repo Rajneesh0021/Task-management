@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { login } from '../../API/Auth'; // Import the login function from auth.js
+import { login } from '../../API/Auth'; 
 import swal from 'sweetalert'
 import { useNavigate,Link } from 'react-router-dom';
 const LoginPage = () => {
