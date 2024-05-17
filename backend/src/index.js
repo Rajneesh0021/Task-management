@@ -1,5 +1,5 @@
-const app = require('./src/config/express');
-const connectDB = require('./src/config/database');
+const app = require('./config/express');
+const connectDB = require('./config/database');
 
 
 
@@ -10,7 +10,6 @@ const connectDB = require('./src/config/database');
 
 
 
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async() => {
     await connectDB
