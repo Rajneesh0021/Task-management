@@ -24,7 +24,7 @@ const DashboardPage = () => {
     };
   
     fetchData();
-  }, [token]); 
+  }, [token,navigate]); 
 
   const handleDeleteTask = async (taskId) => {
     try {
