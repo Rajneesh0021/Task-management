@@ -15,7 +15,9 @@ const authRoutes = require('../routes/authRoutes');
 const taskRoutes = require('../routes/taskRoutes');
 const adminRoutes=require('../routes/adminRoutes')
 
-
+app.get('/',(req,res)=>{
+    res.send('working fine')
+})
 app.use('/api/V0', authRoutes);
 app.use('/api/V0', taskRoutes);
 app.use('/api/V1',adminRoutes);
