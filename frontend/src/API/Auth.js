@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://task-management-o8ye.onrender.com/api/V0';
+const baseURL = 'https://task-management-37bo.onrender.com/api/V0';
 
 // Register a new user or login
 export const Auth = async (userData, endpoint) => {
