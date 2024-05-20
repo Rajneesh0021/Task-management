@@ -21,7 +21,7 @@ const LoginPage = () => {
    await localStorage.setItem('token', data.data.data.token);
    await swal({
       title: "Message",
-      text: data.data.data.message,
+      text: data.data.message,
       icon: "success",
     });
    navigation('/')

@@ -13,7 +13,7 @@ const CreateTaskPage = () => {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   useEffect(() => {
-    if(!token){
+    if(!token || token===undefined){
      navigate('/login')
     }
    

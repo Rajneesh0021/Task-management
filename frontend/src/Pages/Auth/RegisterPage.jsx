@@ -17,17 +17,17 @@ const RegisterPage = () => {
       console.log('Login Successful:',data);
       
     if(data.success){
-    localStorage.setItem('token', data.data.token);
+    
     swal({
       title: "Message",
-      text: data.message,
+      text: data.data.message,
       icon: "success",
     });
-   navigation('/')
+   navigation('/login')
     }else{
       swal({
         title: "Message",
-        text: data.message,
+        text: data.data.message,
         icon: "warning",
       });
     }

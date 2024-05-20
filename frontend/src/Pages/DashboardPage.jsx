@@ -12,7 +12,7 @@ const DashboardPage = () => {
   const [editedTask, setEditedTask] = useState(null);
 
   useEffect(() => {
-    if(!token){
+    if(!token || token===undefined){
      navigate('/login')
     }else{
       const fetchData = async () => {
