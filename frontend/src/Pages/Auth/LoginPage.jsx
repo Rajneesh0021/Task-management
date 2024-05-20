@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { login } from '../../API/Auth'; 
+import { Auth } from '../../API/Auth'; 
 import swal from 'sweetalert'
 import { useNavigate,Link } from 'react-router-dom';
 const LoginPage = () => {
@@ -13,21 +13,23 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const userData = { email, password };
-      const data = await login(userData);
-      console.log('Login Successful:',data);
+      const data = await Auth(userData,'/login');
+      console.log('Login Successful:',data.data.data.message);
       
-    if(data.token){
-    localStorage.setItem('token', data.token);
-    swal({
+
+    if(data.success){
+   await localStorage.setItem('token', data.data.data.token);
+   await swal({
       title: "Message",
-      text: data.message,
+      text: data.data.data.message,
       icon: "success",
     });
    navigation('/')
     }else{
+
       swal({
         title: "Message",
-        text: data.response.data.message,
+        text: data.data.message,
         icon: "warning",
       });
     }

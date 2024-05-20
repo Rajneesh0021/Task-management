@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import swal from 'sweetalert';
-import { fetchTasks, deleteTask, updateTask } from '../API/Api';
+import {  deleteTask, updateTask, APICall } from '../API/Api';
 import Navbar from '../Components/Navbar';
 
 const DashboardPage = () => {
@@ -17,28 +17,46 @@ const DashboardPage = () => {
     }else{
       const fetchData = async () => {
         try {
-          const data = await fetchTasks(token);
-          setTasks(data);
+          const data = await APICall('', token, '/','get');
+          console.log('data',data)
+          if(data.success){
+            setTasks(data.data.data);
+          }else{
+            swal({
+              title: "Message",
+              text: data.message,
+              icon: "warning",
+            });
+          }
+         
+        
         } catch (error) {
-          console.error('Error fetching tasks:', error);
+          console.log('Error fetching tasks:', error);
         }
       };
   
       fetchData();
     }
    
-  }, [token]);
+  }, [token,navigate]);
 
   const handleDeleteTask = async (taskId) => {
     try {
-    const data=  await deleteTask(taskId, token);
-    if(data.message){
+        
+    const data=  await APICall('',token, `/${taskId}`,'delete');
+    if(data.success){
+      await  swal({
+        title: "Message",
+        text: data.data.message,
+        icon: "success",
+      });
+      window.location.reload();
+     }else{
       await  swal({
         title: "Message",
         text: data.message,
         icon: "warning",
       });
-      window.location.reload();
      }
     } catch (error) {
       console.log('Error deleting task:', error);
@@ -51,32 +69,40 @@ const DashboardPage = () => {
 
   const handleUpdateStatus = async (taskId) => {
     try {
+   
       const updatedTask = { ...tasks.find(task => task._id === taskId), status: 'Completed' };
-     const data= await updateTask(taskId, updatedTask, token);
+     const data= await APICall(updatedTask,token,`/${taskId}`,'put');
       console.log(data)
-      if(data.message){
+      if(data.success){
         await swal({
           title: "Message",
-          text: data.message,
+          text: data.data.message,
           icon: "success",
         });
         window.location.reload();
+      }else{
+        await swal({
+          title: "Message",
+          text: data.message,
+          icon: "warning",
+        });
       }
      
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.log('Error updating status:', error);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-     const data= await updateTask(editedTask._id, editedTask, token);
+       // payload,token, endpoint,method
+     const data= await APICall(editedTask,token,`/${editedTask._id}`,'put');
       console.log(data)
-      if(data.message){
+      if(data.success){
        await swal({
           title: "Message",
-          text: data.message,
+          text: data.data.message,
           icon: "success",
         });
         window.location.reload();

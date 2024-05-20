@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { register } from '../../API/Auth';
+import { Auth } from '../../API/Auth';
 import swal from 'sweetalert';
 import { useNavigate,Link } from 'react-router-dom';
 
@@ -13,21 +13,21 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       const userData = { email, password };
-      const data = await register(userData);
+      const data = await Auth(userData,'/signup');
       console.log('Login Successful:',data);
       
-    if(data.token){
-    localStorage.setItem('token', data.token);
+    if(data.success){
+    localStorage.setItem('token', data.data.token);
     swal({
       title: "Message",
       text: data.message,
       icon: "success",
     });
-   navigation('/login')
+   navigation('/')
     }else{
       swal({
         title: "Message",
-        text: data.response.data.message,
+        text: data.message,
         icon: "warning",
       });
     }

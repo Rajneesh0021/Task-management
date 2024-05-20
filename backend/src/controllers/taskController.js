@@ -1,21 +1,22 @@
 const Task = require('../models/taskModel');
+const { ResponseHandler } = require('../responseHandler/responseHandler');
 
 exports.createTask = async (req, res, next) => {
   try {
     const task = new Task({ ...req.body, assignedUser: req.userId });
     await task.save();
-    res.status(201).json({message:"New Task Created !", task});
+    ResponseHandler(res, task, "New Task Created!", 201);
   } catch (error) {
-    next(error);
+    ResponseHandler(res, null, error.message, 500);
   }
 };
 
 exports.getAllTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find({ assignedUser: req.userId });
-    res.status(200).json(tasks);
+    ResponseHandler(res, tasks, "Tasks fetched successfully!", 200);
   } catch (error) {
-    next(error);
+    ResponseHandler(res, null, error.message, 500);
   }
 };
 
@@ -23,16 +24,16 @@ exports.getTaskById = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.taskId);
     if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+      return ResponseHandler(res, null, 'Task not found', 404);
     }
 
     if (task.assignedUser.toString() !== req.userId) {
-      return res.status(403).json({ message: 'Unauthorized access to task' });
+      return ResponseHandler(res, null, 'Unauthorized access to task', 403);
     }
 
-    res.status(200).json({message:"Single task fetched !",task});
+    ResponseHandler(res, task, "Single task fetched!", 200);
   } catch (error) {
-    next(error);
+    ResponseHandler(res, null, error.message, 500);
   }
 };
 
@@ -44,16 +45,16 @@ exports.updateTask = async (req, res, next) => {
       { new: true, runValidators: true }
     );
     if (!task) {
-      return res.status(404).json({ message: 'Task not found !' });
+      return ResponseHandler(res, null, 'Task not found', 404);
     }
 
     if (task.assignedUser.toString() !== req.userId) {
-      return res.status(403).json({ message: 'Unauthorized access to task !' });
+      return ResponseHandler(res, null, 'Unauthorized access to task', 403);
     }
 
-    res.status(201).json({message:"Updated the task !",task});
+    ResponseHandler(res, task, "Updated the task!", 200);
   } catch (error) {
-    next(error);
+    ResponseHandler(res, null, "Failed to update task", 500);
   }
 };
 
@@ -61,16 +62,16 @@ exports.deleteTask = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.taskId);
     if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+      return ResponseHandler(res, null, 'Task not found', 404);
     }
 
     if (task.assignedUser.toString() !== req.userId) {
-      return res.status(403).json({ message: 'Unauthorized access to task' });
+      return ResponseHandler(res, null, 'Unauthorized access to task', 403);
     }
 
-    const deletedTask = await Task.findByIdAndDelete({_id:req.params.taskId});
-    res.status(200).send({message:"deleted successfully !", deletedTask});
+    const deletedTask = await Task.findByIdAndDelete(req.params.taskId);
+    ResponseHandler(res, deletedTask, "Deleted successfully!", 200);
   } catch (error) {
-    next(error);
+    ResponseHandler(res, null, "Failed to delete task", 500);
   }
 };

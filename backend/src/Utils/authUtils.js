@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-
+const { ResponseHandler } = require('../responseHandler/responseHandler');
 // Function to hash a password
 const hashPassword = async (password) => {
   try {
@@ -7,7 +7,7 @@ const hashPassword = async (password) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     return hashedPassword;
   } catch (error) {
-    throw new Error('Error hashing password');
+    ResponseHandler(res,null, error.message, 500);
   }
 };
 
@@ -17,7 +17,7 @@ const comparePassword = async (password, hashedPassword) => {
     const match = await bcrypt.compare(password, hashedPassword);
     return match;
   } catch (error) {
-    throw new Error('Error comparing passwords');
+    ResponseHandler(res, null, error.message, 500);
   }
 };
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { createTask } from '../API/Api';
+import { APICall, createTask } from '../API/Api';
 import swal from 'sweetalert'
 
 
@@ -17,7 +17,7 @@ const CreateTaskPage = () => {
      navigate('/login')
     }
    
-  }, [token]);
+  }, [token,navigate]);
 
 
   const handleSubmit = async(e) => {
@@ -29,11 +29,12 @@ const CreateTaskPage = () => {
     };
   
     try {
-    const response=  await createTask(newTask,token); 
-    if(response.message){
+       // payload,token, endpoint,method
+    const response=  await APICall(newTask,token,'/','post'); 
+    if(response.success){
       swal({
         title: "Message",
-        text: response.message,
+        text: response.data.message,
         icon: "success",
       });
       setTitle('')
@@ -42,7 +43,7 @@ const CreateTaskPage = () => {
     }
       console.log(response)
     } catch (error) {
-      console.error('Error deleting task:', error);
+      console.log('Error deleting task:', error);
     }
     console.log(newTask)
   };

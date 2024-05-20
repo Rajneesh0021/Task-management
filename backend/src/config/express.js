@@ -11,20 +11,14 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-const taskRoutes = require('../routes/taskRoutes');
 const authRoutes = require('../routes/authRoutes');
+const taskRoutes = require('../routes/taskRoutes');
+const adminRoutes=require('../routes/adminRoutes')
 
 
-app.use('/tasks', taskRoutes);
-app.use('/auth', authRoutes); 
-
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
-});
-
+app.use('/api/V0', authRoutes);
+app.use('/api/V0', taskRoutes);
+app.use('/api/V1',adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 
