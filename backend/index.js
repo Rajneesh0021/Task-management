@@ -1,5 +1,5 @@
-const app = require('./config/express');
-const connectDB = require('./config/database');
+const app = require('./src/config/express');
+const connectDB = require('./src/config/database');
 
 
 
