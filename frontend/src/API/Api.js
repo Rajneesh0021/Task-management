@@ -18,11 +18,11 @@ export const APICall = async (payload,token, endpoint,method) => {
     if (response.status === 200 || response.status === 201) {
       return { success: true, data: response.data };
     } else {
-      // Handle other status codes appropriately
+      
       return { success: false, message: response.statusText };
     }
   } catch (error) {
-    // Check if the error response exists
+    
     if (error.response) {
       return {
         success: false,
